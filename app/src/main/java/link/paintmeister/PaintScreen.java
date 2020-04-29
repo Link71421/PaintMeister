@@ -1,8 +1,8 @@
 package link.paintmeister;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,7 +13,6 @@ import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
 //################################################################
@@ -28,8 +27,8 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
 
     CustomView touchArea;
     TextView tv;
-    String brushColor;
-    String backgroundColor;
+    int brushColor;
+    int backgroundColor;
     float brushSize;
 
     private ShapeDrawable[] mDrawable = new ShapeDrawable[5];
@@ -53,8 +52,8 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         pref.registerOnSharedPreferenceChangeListener(observer);
         brushSize = (float)pref.getInt("brushSize", 10);
-        brushColor = pref.getString("brushColor", "#000000");
-        backgroundColor = pref.getString("backColor", "#FFFFFF");
+        brushColor = Color.parseColor(pref.getString("brushColor", "#000000"));
+        backgroundColor = Color.parseColor(pref.getString("backColor", "#FFFFFF"));
         setBrushSettings();
     }//==========================================================
 
@@ -84,11 +83,21 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
         return false;
     }//===========================================================
 
+    /**
+     * Inflates the action bar
+     * @param menu - The menu to inflate
+     * @return A boolean that the operation was complete
+     */
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
+    /**
+     * Detects when an action bar button has been pressed
+     * @param item - The button that was pressed
+     * @return A boolean indicating the button press was handled
+     */
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i = null;
         switch (item.getItemId()) {
@@ -114,18 +123,26 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
         return super.onOptionsItemSelected(item);
     }//end method
 
+    /**
+     * The listener for changes to the settings
+     */
     SharedPreferences.OnSharedPreferenceChangeListener observer = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             brushSize = (float)sharedPreferences.getInt("brushSize", 10);
-            brushColor = sharedPreferences.getString("brushColor", "#000000");
-            backgroundColor = sharedPreferences.getString("backColor", "#FFFFFF");
+            brushColor = Color.parseColor(sharedPreferences.getString("brushColor", "#000000"));
+            backgroundColor = Color.parseColor(sharedPreferences.getString("backColor", "#FFFFFF"));
             setBrushSettings();
         }
     };
 
+    /**
+     * Sets the setting for the brush and background
+     */
     private void setBrushSettings(){
         touchArea.setRadius(brushSize);
+        touchArea.setColor(brushColor);
+        touchArea.setBackgroundColor(backgroundColor);
     }
 
 }//###############################################################

@@ -11,8 +11,6 @@ import java.util.Observer;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private Observer observer;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

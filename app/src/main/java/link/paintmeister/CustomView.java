@@ -27,10 +27,17 @@ public class CustomView extends View  implements OnTouchListener {
 	private Paint paint1;
 	private ArrayList<ShapeDrawable> mDrawable;
 
+	private float radius;
+	private int color;
+
 	/**Store the X coordinates**/
-	private ArrayList<Float> xs = new ArrayList<Float>();
+	private ArrayList<Float> xs = new ArrayList<>();
 	/**Store the Y coordinates**/
-	private ArrayList<Float> xy = new ArrayList<Float>();
+	private ArrayList<Float> xy = new ArrayList<>();
+	/**Store the Radius**/
+	private ArrayList<Float> rad = new ArrayList<>();
+	/**Store the Color**/
+	private ArrayList<Integer> col = new ArrayList<>();
 	//===================================================
 	/**
 	 * Called when the custom view is initialized
@@ -45,12 +52,10 @@ public class CustomView extends View  implements OnTouchListener {
 
 		paint1 = new Paint();
 		paint1.setColor(Color.GREEN);
+		color = Color.GREEN;
 		paint1.setStrokeWidth(4);
-		radius=10;
+		radius = 10;
 	}//===================================================
-
-	/**Radius of brush**/
-	private float radius;
 
 	//=====================================================
 	/**
@@ -62,7 +67,8 @@ public class CustomView extends View  implements OnTouchListener {
 		//Loop though each x and y coordinate and draw a circle
 		int y = 0;
 		for(Float x : xs){
-			canvas.drawCircle(x, xy.get(y),radius, paint1);
+			paint1.setColor(col.get(y));
+			canvas.drawCircle(x, xy.get(y),rad.get(y), paint1);
 			y++;
 		}//end for
 
@@ -85,6 +91,9 @@ public class CustomView extends View  implements OnTouchListener {
 
 		xs.add(new Float(x));
 		xy.add(new Float(y));
+		rad.add(radius);
+		col.add(color);
+
 
 		float width = 4f;
 		float height = 4f;
@@ -93,11 +102,19 @@ public class CustomView extends View  implements OnTouchListener {
 		return true;
 	}//===================================================
 
+	/**
+	 * Sets the radius of the brush
+	 * @param rad - The radius to set the brush
+	 */
 	public void setRadius(float rad){
 		this.radius = rad;
 	}
 
-	public void setColor(String col){
-		paint1.setColor(Integer.parseInt(col));
+	/**
+	 * Sets the color of the brush
+	 * @param col - The color to set the brush
+	 */
+	public void setColor(int col){
+		this.color = col;
 	}
 }//#######################################################
