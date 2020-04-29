@@ -98,6 +98,6 @@ public class CustomView extends View  implements OnTouchListener {
 	}
 
 	public void setColor(String col){
-		paint1.setColor(0xFFFFFF);
+		paint1.setColor(Integer.parseInt(col));
 	}
 }//#######################################################

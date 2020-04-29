@@ -51,9 +51,11 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
         //touchArea.setTextView(tv);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        brushSize = Float.parseFloat(pref.getString("b_size","10"));
-        brushColor = pref.getString("b_color", "#000000");
-        backgroundColor = pref.getString("back_color", "#FFFFFF");
+        pref.registerOnSharedPreferenceChangeListener(observer);
+        brushSize = (float)pref.getInt("brushSize", 10);
+        brushColor = pref.getString("brushColor", "#000000");
+        backgroundColor = pref.getString("backColor", "#FFFFFF");
+        setBrushSettings();
     }//==========================================================
 
     //===========================================================
@@ -115,8 +117,15 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
     SharedPreferences.OnSharedPreferenceChangeListener observer = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
+            brushSize = (float)sharedPreferences.getInt("brushSize", 10);
+            brushColor = sharedPreferences.getString("brushColor", "#000000");
+            backgroundColor = sharedPreferences.getString("backColor", "#FFFFFF");
+            setBrushSettings();
         }
     };
+
+    private void setBrushSettings(){
+        touchArea.setRadius(brushSize);
+    }
 
 }//###############################################################

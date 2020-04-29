@@ -7,7 +7,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 
+import java.util.Observer;
+
 public class SettingsActivity extends AppCompatActivity {
+
+    private Observer observer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

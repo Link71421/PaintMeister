@@ -7,19 +7,18 @@
         app:defaultValue="#000000"
         app:entries="@array/color_names"
         app:entryValues="@array/color_values"
-        app:key="b_color"
+        app:key="brushColor"
         app:title="Brush Color"
         app:useSimpleSummaryProvider="true" />
 
         <SeekBarPreference
-            app:defaultValue="10"
-            app:seekBarIncrement="1"
-            app:showSeekBarValue="true"
             android:max="30"
+            android:defaultValue="10"
+            android:title="Brush Size"
+            android:key="brushSize"
             app:min="0"
-            app:title="Brush Size"
-            app:key="b_size"
-            app:useSimpleSummaryProvider="true" />
+            app:showSeekBarValue="true"
+        />
 
     </PreferenceCategory>
 
@@ -29,7 +28,7 @@
             app:defaultValue="#FFFFFF"
             app:entries="@array/color_names"
             app:entryValues="@array/color_values"
-            app:key="back_color"
+            app:key="backColor"
             app:title="Background Color"
             app:useSimpleSummaryProvider="true" />
 
