@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Paint Meister</string>
+    <string name="load">Load Painting</string>
+    <string name="save">Save Painting</string>
+    <string name="newdraw">New Painting</string>
+    <string name="brush">Brush Settings</string>
+</resources>
