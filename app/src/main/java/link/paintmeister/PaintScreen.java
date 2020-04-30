@@ -3,85 +3,50 @@ package link.paintmeister;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.widget.TextView;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
-//################################################################
-
 /**
+ * This Activity how the custom view where the user paints
  *
- * @author Andrew
- *
+ * @author Dillon Ramsey
  */
-//################################################################
 public class PaintScreen extends AppCompatActivity implements OnTouchListener {
 
     CustomView touchArea;
-    TextView tv;
     int brushColor;
     int backgroundColor;
     float brushSize;
 
-    private ShapeDrawable[] mDrawable = new ShapeDrawable[5];
-
-    //===========================================================
     /**
      * Called when the view is created
      */
-    //===========================================================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paint_screen);
 
+        /*The painting area*/
         touchArea = (CustomView) this.findViewById(R.id.view1);
-        //	touchArea.setOnTouchListener(this);
 
-        tv = (TextView) this.findViewById(R.id.textView1);
-        //touchArea.setTextView(tv);
-
+        /*Setting up a listener for when the user changes settings*/
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         pref.registerOnSharedPreferenceChangeListener(observer);
+
+        /*Getting the saved settings for the brush*/
         brushSize = (float)pref.getInt("brushSize", 10);
         brushColor = Color.parseColor(pref.getString("brushColor", "#000000"));
         backgroundColor = Color.parseColor(pref.getString("backColor", "#FFFFFF"));
         setBrushSettings();
-    }//==========================================================
-
-    //===========================================================
-    /**
-     * Called when the view instance is touched by the user.
-     * @param v The view instance that was touched.
-     * @param event The motion event that carries the touch data.
-     */
-    //===========================================================
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-
-        float raw_x = event.getRawX();
-        float raw_y = event.getRawY();
-
-        float axis_x = event.getAxisValue(MotionEvent.AXIS_X);
-        float axis_y = event.getAxisValue(MotionEvent.AXIS_Y);
-
-
-        float x = event.getX();
-        float y = event.getY();
-        tv.setText("RAW X:" + raw_x + "Y: " + raw_y +
-                "     AXIS X:" + axis_x + " Y:" + axis_y +
-                "     GETX:" + x + "  GETY:" + y);
-
-        return false;
-    }//===========================================================
+    }
 
     /**
      * Inflates the action bar
@@ -106,22 +71,26 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
                 break;
                 /*
             case R.id.new_painting:
-                i = new Intent(this, Camera.class);
+                //TODO Create a method to clear the painting. Preferably open a dialog to ask if the user is sure they want to clear the painting
+                newPainting();
                 break;
             case R.id.load_painting:
-                i = new Intent(this, Gallery.class);
+                //TODO Determine how we will load a painting into the app. A dialog to say the current painting will be cleared would be good as well
+                i = new Intent(this, Load.class);
                 break;
             case R.id.save_painting:
-                i = new Intent(this, Gallery.class);
+                //TODO Choose a method of saving the paint. This will Preferably be XML.
+                //TODO Determine how to allow the user to save to external location.
+                i = new Intent(this, Save.class);
                 break;
                  */
-        }//end switch
+        }
         if (i != null){
             this.startActivity(i);
             return true;
-        }//end if
+        }
         return super.onOptionsItemSelected(item);
-    }//end method
+    }
 
     /**
      * The listener for changes to the settings
@@ -137,7 +106,7 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
     };
 
     /**
-     * Sets the setting for the brush and background
+     * Sets the settings for the brush and background
      */
     private void setBrushSettings(){
         touchArea.setRadius(brushSize);
@@ -145,4 +114,15 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
         touchArea.setBackgroundColor(backgroundColor);
     }
 
-}//###############################################################
+    /**
+     * Currently nothing needs to be done here
+     * @param v - The view that was touched
+     * @param event - The event that holds the motion data
+     */
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
+    }
+
+    //TODO Add any other features we deem needed to the app and make the interface look good
+}

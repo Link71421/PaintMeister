@@ -7,10 +7,16 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 
-import java.util.Observer;
-
+/**
+ * This activity sets up the settings menu for the brush and background for the paint area
+ *
+ * @author Dillon Ramsey
+ */
 public class SettingsActivity extends AppCompatActivity {
 
+    /**
+     * Called when the view is created
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +31,9 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets up the PreferenceFragment that will be used to display the settings
+     */
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -32,6 +41,10 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Allows the back button to be used to return to the paint screen
+     * @param item - The menu item selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
