@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
@@ -67,13 +68,23 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
         Intent i = null;
         switch (item.getItemId()) {
             case R.id.brush_settings:
+
+
                 i = new Intent(this,SettingsActivity.class);
                 break;
-                /*
+
             case R.id.new_painting:
-                //TODO Create a method to clear the painting. Preferably open a dialog to ask if the user is sure they want to clear the painting
-                newPainting();
+
+                //Display a dialog to ask if the user wants to start a new painting
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("New Painting");
+                builder.setMessage("Are you sure you want a new painting?").setPositiveButton(
+                            "Yes", (dialog, id) -> touchArea.newPainting()).setNegativeButton(
+                                    "No", (dialog, id) -> noNewPainting());
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 break;
+                /*
             case R.id.load_painting:
                 //TODO Determine how we will load a painting into the app. A dialog to say the current painting will be cleared would be good as well
                 i = new Intent(this, Load.class);
@@ -122,6 +133,13 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         return false;
+    }
+
+    /**
+     * Method to run if the user decides not to make a new painting. Currently does nothing.
+     */
+    private void noNewPainting(){
+        //Do Nothing Currently
     }
 
     //TODO Add any other features we deem needed to the app and make the interface look good

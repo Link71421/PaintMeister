@@ -1,80 +1,117 @@
 package link.paintmeister;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
-//#######################################################
+import java.util.ArrayList;
+
+
 /**
- * A custom view to capture onClickEvents and draw circles
+ * A custom view to capture onClickEvents and draw strokes
  * where clicked.
  *
  * @author Dillon Ramsey
  */
-//#######################################################
 public class CustomView extends View  implements OnTouchListener {
 
-	private Paint paint1;
+
+	/**An array list of Line objects (line is inner class)**/
+	private ArrayList<Path> Plines;
+
+	/**The path currently being drawn by the user**/
+	private Path activePath;
+
+	/**The pain that is currently used to draw**/
+	Paint paint;
+
+	/**Object for holding the lines along with their respective colors and radii**/
+	PaintLines lines;
 
 	private float radius;
 	private int color;
-
-	/**Store the X coordinates**/
-	private ArrayList<Float> xs = new ArrayList<>();
-	/**Store the Y coordinates**/
-	private ArrayList<Float> xy = new ArrayList<>();
-	/**Store the Radius**/
-	private ArrayList<Float> rad = new ArrayList<>();
-	/**Store the Color**/
-	private ArrayList<Integer> col = new ArrayList<>();
 
 	/**
 	 * Called when the custom view is initialized
 	 * @param context
 	 */
-
 	public CustomView(Context context, AttributeSet attrs) {
 		super(context,attrs);
 
 		this.setOnTouchListener(this);
 
-		/*Set the initial parameters for the brush*/
-		paint1 = new Paint();
-		paint1.setColor(Color.GREEN);
-		color = Color.GREEN;
-		paint1.setStrokeWidth(4);
-		radius = 10;
+		paint = new Paint();
+		paint.setStyle(Paint.Style.STROKE);
+		paint.setStrokeWidth(2);
+		paint.setColor(Color.GREEN);
 	}
 
 	/**
 	 * Draw the canvas items
 	 */
 	protected void onDraw(Canvas canvas) {
-
-		//Loop though each x and y coordinate and draw a circle
-		int y = 0;
-		for (Float x : xs) {
-			paint1.setColor(col.get(y));
-			canvas.drawCircle(x, xy.get(y), rad.get(y), paint1);
-			y++;
+		if(lines != null){
+			int size = lines.getLength();
+			for(int i = 0; i < size; i++){
+				paint.setColor(lines.getColor(i));
+				paint.setStrokeWidth(lines.getRadius(i));
+				canvas.drawPath(lines.getPath(i),paint);
+			}
+			if (activePath != null) {
+				paint.setColor(color);
+				paint.setStrokeWidth(radius);
+				canvas.drawPath(activePath, paint);
+			}
 		}
-
 	}
 
 	/**
-	 * Currently nothing needs to be done here
-	 * @param v - The view that was touched
-	 * @param event - The event that holds the motion data
+	 * When the users finger is placed on the screen
+	 * @param x coordinate
+	 * @param y The y coordinate.
+	 * @param v The view touched
+	 */
+	public void touchDown(float x, float y,View v){
+		if (lines == null){
+			lines = new PaintLines();
+		}
+		if (activePath == null){
+			activePath = new Path();
+		}
+		activePath.moveTo(x,y);
+	}
+
+	/**
+	 * When the users finger is dragged.
+	 * @param x coordinate
+	 * @param y The y coordinate.
+	 * @param v The view touched
+	 */
+	public void touchMove(float x, float y, View v){
+		activePath.lineTo(x,y);
+	}
+
+	/**
+	 * When the users finger is lifted.
+	 * @param x The x coordinate
+	 * @param y The y coordinate.
+	 * @param v The view touched
+	 */
+
+	public void touchUp(float x, float y,View v){
+		lines.addLine(activePath,color,radius);
+		activePath = null;
+	}
+
+	/**
+	 * When the view is touched.
 	 */
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
@@ -83,13 +120,20 @@ public class CustomView extends View  implements OnTouchListener {
 		float x = event.getX();
 		float y = event.getY();
 
-		/*Add points, current radius and current color to arrays*/
-		xs.add(new Float(x));
-		xy.add(new Float(y));
-		rad.add(radius);
-		col.add(color);
 
-		this.invalidate();
+		switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				touchDown(x, y, v);
+				break;
+			case MotionEvent.ACTION_MOVE:
+				touchMove(x, y,v);
+				break;
+			case MotionEvent.ACTION_UP:
+				touchUp(x,y,v);
+				break;
+		}
+
+		invalidate();
 		return true;
 	}
 
@@ -99,6 +143,7 @@ public class CustomView extends View  implements OnTouchListener {
 	 */
 	public void setRadius(float rad){
 		this.radius = rad;
+		paint.setStrokeWidth(radius);
 	}
 
 	/**
@@ -107,5 +152,14 @@ public class CustomView extends View  implements OnTouchListener {
 	 */
 	public void setColor(int col){
 		this.color = col;
+		paint.setColor(color);
 	}
-}//#######################################################
+
+	/**
+	 * Clears the arrays to start a new painting
+	 */
+	public void newPainting(){
+		lines.clearPainting();
+		this.invalidate();
+	}
+}
