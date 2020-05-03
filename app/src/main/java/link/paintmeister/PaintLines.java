@@ -1,6 +1,7 @@
 package link.paintmeister;
 
 import android.graphics.Path;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -12,72 +13,64 @@ import java.util.ArrayList;
 public class PaintLines {
 
     /**ArrayList of Path objects**/
-    private ArrayList<Path> lines;
+    private Path line;
 
     /**The colors for the Paths**/
-    private ArrayList<Integer> color;
+    private Integer color;
 
     /**The radius to draw each Path**/
-    private ArrayList<Float> radius;
+    private Float radius;
+
+    /**The x values for the line**/
+    private ArrayList<Float> x_values;
+
+    /**The y values for the line**/
+    private ArrayList<Float> y_values;
 
     /**
      * Default constructor
      */
-    PaintLines(){
-        this.lines = new ArrayList<>();
-        this.color = new ArrayList<>();
-        this.radius = new ArrayList<>();
-    }
-
-    /**
-     * Adds a Path to the array list along with its color and radius
-     * @param p - The Path to add
-     * @param c - The color of the Path
-     * @param r - The radius of the Path
-     */
-    public void addLine(Path p, int c, float r){
-        lines.add(p);
-        color.add(c);
-        radius.add(r);
+    PaintLines(Path line, int color, float radius, ArrayList<Float> x_values, ArrayList<Float> y_values){
+        this.line = line;
+        this.color = color;
+        this.radius = radius;
+        this.x_values = x_values;
+        this.y_values = y_values;
     }
 
     /**
      * Gets the Path at the specified index
-     * @param i - The index of the Path
      */
-    public Path getPath(int i){
-        return lines.get(i);
+    public Path getPath(){
+        return line;
     }
 
     /**
      * Gets the color at the specified index
-     * @param i - The index of the color
      */
-    public int getColor(int i){
-        return color.get(i);
+    public int getColor(){
+        return color;
     }
 
     /**
      * Gets the radius at the specified index
-     * @param i - The index of the radius
      */
-    public float getRadius(int i){
-        return radius.get(i);
+    public float getRadius(){
+        return radius;
     }
 
-    /**
-     * Gets the length of the Path ArrayList
-     */
-    public int getLength(){
-        return lines.size();
-    }
-
-    /**
-     * Clears all the ArrayLists
-     */
-    public void clearPainting(){
-        lines.clear();
-        color.clear();
-        radius.clear();
+    public String toXML(){
+        StringBuilder builder = new StringBuilder();
+        builder.append("<lines>\n");
+        builder.append("\t<color>"+color+"</color>\n");
+        builder.append("\t<color>"+radius+"</color>\n");
+        for (float x : x_values){
+            builder.append("\t<x>"+x+"</x>\n");
+        }
+        for (float y : y_values){
+            builder.append("\t<y>"+y+"</y>\n");
+        }
+        builder.append("</lines>\n");
+        return builder.toString();
     }
 }

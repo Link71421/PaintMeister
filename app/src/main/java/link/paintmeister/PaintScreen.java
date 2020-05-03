@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -89,12 +90,13 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
                 //TODO Determine how we will load a painting into the app. A dialog to say the current painting will be cleared would be good as well
                 i = new Intent(this, Load.class);
                 break;
+                */
             case R.id.save_painting:
                 //TODO Choose a method of saving the paint. This will Preferably be XML.
                 //TODO Determine how to allow the user to save to external location.
-                i = new Intent(this, Save.class);
+                String test = touchArea.toXML();
+                Log.d("XML", test);
                 break;
-                 */
         }
         if (i != null){
             this.startActivity(i);

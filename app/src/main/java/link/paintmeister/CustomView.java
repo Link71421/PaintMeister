@@ -24,7 +24,7 @@ public class CustomView extends View  implements OnTouchListener {
 
 
 	/**An array list of Line objects (line is inner class)**/
-	private ArrayList<Path> Plines;
+	private ArrayList<PaintLines> lines;
 
 	/**The path currently being drawn by the user**/
 	private Path activePath;
@@ -32,8 +32,11 @@ public class CustomView extends View  implements OnTouchListener {
 	/**The pain that is currently used to draw**/
 	Paint paint;
 
-	/**Object for holding the lines along with their respective colors and radii**/
-	PaintLines lines;
+	/**The x values for the line**/
+	private ArrayList<Float> x_values;
+
+	/**The y values for the line**/
+	private ArrayList<Float> y_values;
 
 	private float radius;
 	private int color;
@@ -58,11 +61,11 @@ public class CustomView extends View  implements OnTouchListener {
 	 */
 	protected void onDraw(Canvas canvas) {
 		if(lines != null){
-			int size = lines.getLength();
+			int size = lines.size();
 			for(int i = 0; i < size; i++){
-				paint.setColor(lines.getColor(i));
-				paint.setStrokeWidth(lines.getRadius(i));
-				canvas.drawPath(lines.getPath(i),paint);
+				paint.setColor(lines.get(i).getColor());
+				paint.setStrokeWidth(lines.get(i).getRadius());
+				canvas.drawPath(lines.get(i).getPath(),paint);
 			}
 			if (activePath != null) {
 				paint.setColor(color);
@@ -80,11 +83,19 @@ public class CustomView extends View  implements OnTouchListener {
 	 */
 	public void touchDown(float x, float y,View v){
 		if (lines == null){
-			lines = new PaintLines();
+			lines = new ArrayList<>();
 		}
 		if (activePath == null){
 			activePath = new Path();
 		}
+		if (x_values == null){
+			x_values = new ArrayList<>();
+		}
+		if (y_values ==  null){
+			y_values = new ArrayList<>();
+		}
+		x_values.add(x);
+		y_values.add(y);
 		activePath.moveTo(x,y);
 	}
 
@@ -95,6 +106,8 @@ public class CustomView extends View  implements OnTouchListener {
 	 * @param v The view touched
 	 */
 	public void touchMove(float x, float y, View v){
+		x_values.add(x);
+		y_values.add(y);
 		activePath.lineTo(x,y);
 	}
 
@@ -106,8 +119,12 @@ public class CustomView extends View  implements OnTouchListener {
 	 */
 
 	public void touchUp(float x, float y,View v){
-		lines.addLine(activePath,color,radius);
+		x_values.add(x);
+		y_values.add(y);
+		lines.add(new PaintLines(activePath,color,radius,x_values,y_values));
 		activePath = null;
+		x_values = null;
+		y_values = null;
 	}
 
 	/**
@@ -132,7 +149,6 @@ public class CustomView extends View  implements OnTouchListener {
 				touchUp(x,y,v);
 				break;
 		}
-
 		invalidate();
 		return true;
 	}
@@ -159,7 +175,17 @@ public class CustomView extends View  implements OnTouchListener {
 	 * Clears the arrays to start a new painting
 	 */
 	public void newPainting(){
-		lines.clearPainting();
+		lines.clear();
 		this.invalidate();
+	}
+
+	public String toXML(){
+		StringBuilder builder = new StringBuilder();
+		builder.append("<PaintLines>\n");
+		for (PaintLines pl : lines){
+			builder.append(pl.toXML());
+		}
+		builder.append("</PaintLines>\n");
+		return builder.toString();
 	}
 }
