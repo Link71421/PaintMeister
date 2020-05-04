@@ -10,23 +10,43 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-
-
+import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 /**
- * This Activity how the custom view where the user paints
+ * This Activity is how the custom view where the user paints
  *
  * @author Dillon Ramsey
+ * @author Zach Garner
  */
 public class PaintScreen extends AppCompatActivity implements OnTouchListener {
 
+    /**A custom view for the paint area*/
     CustomView touchArea;
+
+    /**The color of the brush*/
     int brushColor;
+
+    /**The color of the background*/
     int backgroundColor;
+
+    /**The radius of the brush*/
     float brushSize;
+
 
     /**
      * Called when the view is created
@@ -68,36 +88,38 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent i = null;
         switch (item.getItemId()) {
+
             case R.id.brush_settings:
-
-
                 i = new Intent(this,SettingsActivity.class);
                 break;
 
             case R.id.new_painting:
-
                 //Display a dialog to ask if the user wants to start a new painting
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("New Painting");
                 builder.setMessage("Are you sure you want a new painting?").setPositiveButton(
                             "Yes", (dialog, id) -> touchArea.newPainting()).setNegativeButton(
-                                    "No", (dialog, id) -> noNewPainting());
+                                    "No", (dialog, id) -> {});
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 break;
-                /*
+
             case R.id.load_painting:
-                //TODO Determine how we will load a painting into the app. A dialog to say the current painting will be cleared would be good as well
-                i = new Intent(this, Load.class);
+                load("Test");
                 break;
-                */
+
             case R.id.save_painting:
-                //TODO Choose a method of saving the paint. This will Preferably be XML.
-                //TODO Determine how to allow the user to save to external location.
                 String str = toXML();
                 i = new Intent(this, save_screen.class);
                 i.putExtra("Painting",str);
+                break;
 
+            case R.id.undo_painting:
+                touchArea.undo();
+                break;
+
+            case R.id.redo_painting:
+                touchArea.redo();
                 break;
         }
         if (i != null){
@@ -106,13 +128,13 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
         }
         return super.onOptionsItemSelected(item);
     }
-    private String toXML(){
-        String background = "<background_color>" + this.backgroundColor + "</background_color>\n";
 
-        String test = touchArea.toXML();
-        background = background + test;
-        Log.d("XML", test);
-        return background;
+    /**
+     * Converts the painting to XML and returns the XML string
+     */
+    private String toXML(){
+        return "<paint>\n"+"\t<background_color>" + this.backgroundColor +
+                "</background_color>\n" + touchArea.toXML() + "</paint>\n";
     }
 
     /**
@@ -148,11 +170,101 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
     }
 
     /**
-     * Method to run if the user decides not to make a new painting. Currently does nothing.
+     * Loads a file from internal storage given a filename
+     * @param filename - The file the user wishes to load
      */
-    private void noNewPainting(){
-        //Do Nothing Currently
+    public void load(String filename){
+        //Create a file if its not already on disk
+        File extDir = new File(this.getFilesDir(),  filename);
+
+        //Read text from file
+        StringBuilder text = new StringBuilder();
+
+
+        //Needs lots of try and catch blocks because so much can go wrong
+        try{
+
+            BufferedReader br = new BufferedReader(new FileReader(extDir));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+            }//end while
+
+            br.close();//Close the buffer
+        }//end try
+        catch (FileNotFoundException e){//If file not found on disk here.
+            Toast.makeText(this, "There was no data to load", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+
+        catch (IOException e)//If io Exception here
+        {
+            Toast.makeText(this, "Error loading file", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }//end catch
+
+
+        //Set the data from the file content and conver it to a String
+        String data = new String(text);
+
+        //Safety first Parse data if available.
+        if (data.length() > 0) {
+            parseXML(data);
+        }
+        else
+            Toast.makeText(this, "There is no data to display", Toast.LENGTH_LONG).show();
     }
 
-    //TODO Add any other features we deem needed to the app and make the interface look good
+    /**
+     * Parses the input XML file
+     * @param rawXML - The raw XML string to be parsed
+     */
+    private void parseXML(String rawXML){
+        Log.w("AndroidParseXMLActivity", "Start Parsing");
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        try {
+
+            //Use the sax parser to parse the raw XML.
+            SAXParser saxParser = factory.newSAXParser();
+            XMLReader xmlreader = saxParser.getXMLReader();
+
+            //Use the handler to parse the XML to text
+            PaintingXMLHandler handler = new PaintingXMLHandler();
+            xmlreader.setContentHandler(handler);
+
+            //Objects to read the stream.
+            InputSource inStream = new InputSource();
+            inStream.setCharacterStream(new StringReader(rawXML));
+
+            //Parse the input stream
+            xmlreader.parse(inStream);
+
+            //Get the map markers from the handler.
+            touchArea.loadPainting(handler.getPaintLines());
+            setBackgroundColor(handler.getBackground());
+
+
+            Toast.makeText(this, "Loaded", Toast.LENGTH_LONG).show();
+        } catch (ParserConfigurationException e) {
+            Toast.makeText(this, "Error 1 reading xml file.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        } catch (SAXException e) {
+            Toast.makeText(this, "Error 2 reading xml file.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }catch(IOException e){
+            Toast.makeText(this, "Error 3 reading xml file.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Sets the background color from the loaded file
+     * @param backColor - The color to set the background as an int
+     */
+    private void setBackgroundColor(int backColor){
+        backgroundColor = backColor;
+        touchArea.setBackgroundColor(backgroundColor);
+    }
 }

@@ -6,11 +6,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-
 import java.util.ArrayList;
 
 
@@ -19,17 +17,21 @@ import java.util.ArrayList;
  * where clicked.
  *
  * @author Dillon Ramsey
+ * @author Zach Garner
  */
 public class CustomView extends View  implements OnTouchListener {
 
 
-	/**An array list of Line objects (line is inner class)**/
+	/**An Array list of paint lines**/
 	private ArrayList<PaintLines> lines;
+
+	/**Array list to hold all the paint lines that can be redone**/
+	private ArrayList<PaintLines> redoLines;
 
 	/**The path currently being drawn by the user**/
 	private Path activePath;
 
-	/**The pain that is currently used to draw**/
+	/**The paint that is currently used to draw**/
 	Paint paint;
 
 	/**The x values for the line**/
@@ -38,12 +40,15 @@ public class CustomView extends View  implements OnTouchListener {
 	/**The y values for the line**/
 	private ArrayList<Float> y_values;
 
+	/**The radius of the line**/
 	private float radius;
+
+	/**The color of the line*/
 	private int color;
 
 	/**
 	 * Called when the custom view is initialized
-	 * @param context
+	 * @param context - The context of the app
 	 */
 	public CustomView(Context context, AttributeSet attrs) {
 		super(context,attrs);
@@ -54,6 +59,7 @@ public class CustomView extends View  implements OnTouchListener {
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeWidth(2);
 		paint.setColor(Color.GREEN);
+		redoLines = new ArrayList<>();
 	}
 
 	/**
@@ -117,7 +123,6 @@ public class CustomView extends View  implements OnTouchListener {
 	 * @param y The y coordinate.
 	 * @param v The view touched
 	 */
-
 	public void touchUp(float x, float y,View v){
 		x_values.add(x);
 		y_values.add(y);
@@ -149,7 +154,8 @@ public class CustomView extends View  implements OnTouchListener {
 				touchUp(x,y,v);
 				break;
 		}
-		invalidate();
+		redoLines.clear();
+		this.invalidate();
 		return true;
 	}
 
@@ -179,14 +185,48 @@ public class CustomView extends View  implements OnTouchListener {
 		this.invalidate();
 	}
 
+	/**
+	 * Loads an array list of paint lines and draws them on the canvas
+	 * @param lines - The loaded painting
+	 */
+	public void loadPainting(ArrayList<PaintLines> lines){
+		this.lines = lines;
+		this.invalidate();
+	}
+
+	/**
+	 * Converts all the paint lines into XML
+	 */
 	public String toXML(){
 		StringBuilder builder = new StringBuilder();
-		builder.append("<PaintLines>\n");
+		builder.append("\t<PaintLines>\n");
 		for (PaintLines pl : lines){
-
 			builder.append(pl.toXML());
 		}
-		builder.append("</PaintLines>\n");
+		builder.append("\t</PaintLines>\n");
 		return builder.toString();
+	}
+
+	/**
+	 * Undoes the most recent stroke and saves it into redoLines until the user has made another
+	 * stroke
+	 */
+	public void undo(){
+		if (!lines.isEmpty()) {
+			redoLines.add(lines.get(lines.size()-1));
+			lines.remove(lines.size() - 1);
+		}
+		this.invalidate();
+	}
+
+	/**
+	 * Redoes any undone lines
+	 */
+	public void redo(){
+		if (!redoLines.isEmpty()){
+			lines.add(redoLines.get(redoLines.size()-1));
+			redoLines.remove(redoLines.size()-1);
+		}
+		this.invalidate();
 	}
 }

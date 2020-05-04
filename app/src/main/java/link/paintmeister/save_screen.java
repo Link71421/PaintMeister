@@ -22,27 +22,24 @@ import java.io.IOException;
  * the painting
  *
  * @author Dillon Ramsey
+ * @author Zach Garner
  */
 public class save_screen extends AppCompatActivity implements View.OnClickListener {
 
+    /**The painting as an XML string*/
     private String paintingXml;
 
-    /**
-     * Valid player name charaters
-     */
-    private static final char[] valid = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-            'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-    /**
-     * Button used to confirm the user is done
-     */
+    /**Valid file name characters*/
+    private static final char[] valid = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+            'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+
+    /**Button used to confirm the user is done*/
     private Button ok;
-    /**
-     * Button used to cancle the save
-     */
-    private Button cancle;
-    /**
-     * EditText box used to take in the name of the painting
-     */
+
+    /**Button used to cancels the save*/
+    private Button cancel;
+
+    /**EditText box used to take in the name of the painting*/
     private EditText painting;
 
     /**
@@ -56,11 +53,11 @@ public class save_screen extends AppCompatActivity implements View.OnClickListen
         setContentView(R.layout.activity_save_screen);
 
         ok = findViewById(R.id.button);
-        cancle = findViewById(R.id.button2);
+        cancel = findViewById(R.id.button2);
         painting = findViewById(R.id.editText);
 
         ok.setOnClickListener(this);
-        cancle.setOnClickListener(this);
+        cancel.setOnClickListener(this);
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
             paintingXml = bundle.getString("Painting");
@@ -103,7 +100,7 @@ public class save_screen extends AppCompatActivity implements View.OnClickListen
                 }
             }
         }
-        else if(v == cancle){
+        else if(v == cancel){
             finish();
         }
     }
@@ -131,7 +128,7 @@ public class save_screen extends AppCompatActivity implements View.OnClickListen
     /**
      * Creates a dialog box that tells the user there entered name is invalid
      *
-     * @param paintName
+     * @param paintName - The name of the painting
      */
     private void invalidName(String paintName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -140,15 +137,13 @@ public class save_screen extends AppCompatActivity implements View.OnClickListen
                 + "characters [A-Z][a-z]").setPositiveButton("Ok", (dialog, id) -> {});
                 builder.show();
     }
+
+    /**
+     * Saves the painting XML string under the given filename
+     * @param fileName - The name to save the painting under
+     */
     public void savePainting(String fileName){
-
         String xml_data = this.paintingXml;
-
-        //Create a file if its not already on disk
-        File file = new File(this.getFilesDir(), fileName);
-
-        //By default black text if no text can be generated from the notePad.
-        //String string = "";
 
         FileOutputStream outputStream;//declare FOS
 

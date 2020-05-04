@@ -4,8 +4,9 @@
     <string name="save">Save Painting</string>
     <string name="newdraw">New Painting</string>
     <string name="brush">Brush Settings</string>
-
     <string name="Save_question">Enter Name for painting</string>
     <string name="okay_button">Okay</string>
     <string name="cancel_button">Cancel</string>
+    <string name="redo">Redo</string>
+    <string name="undo">Undo</string>
 </resources>

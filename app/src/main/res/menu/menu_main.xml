@@ -1,6 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/brush_settings" android:title="@string/brush" android:icon="@drawable/paint_brush" android:orderInCategory="4" app:showAsAction="always"/>
-    <item android:id="@+id/new_painting" android:title="@string/newdraw" android:icon="@drawable/new_painting" android:orderInCategory="3" app:showAsAction="always"/>
-    <item android:id="@+id/load_painting" android:title="@string/load" android:icon="@drawable/load_painting" app:showAsAction="ifRoom"/>
-    <item android:id="@+id/save_painting" android:title="@string/save" android:icon="@drawable/save_painting" app:showAsAction="ifRoom"/>
+    <item android:id="@+id/new_painting" android:title="@string/newdraw" android:icon="@drawable/new_painting" android:orderInCategory="1" app:showAsAction="always"/>
+    <item android:id="@+id/brush_settings" android:title="@string/brush" android:icon="@drawable/paint_brush" android:orderInCategory="2" app:showAsAction="always"/>
+    <item android:id="@+id/undo_painting" android:title="@string/undo" android:icon="@drawable/undo_painting" android:orderInCategory="3" app:showAsAction="always"/>
+    <item android:id="@+id/redo_painting" android:title="@string/redo" android:icon="@drawable/redo_painting" android:orderInCategory="4" app:showAsAction="ifRoom"/>
+    <item android:id="@+id/load_painting" android:title="@string/load" android:icon="@drawable/load_painting" android:orderInCategory="5" app:showAsAction="ifRoom"/>
+    <item android:id="@+id/save_painting" android:title="@string/save" android:icon="@drawable/save_painting" android:orderInCategory="6" app:showAsAction="ifRoom"/>
 </menu>

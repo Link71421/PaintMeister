@@ -2,7 +2,6 @@ package link.paintmeister;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
@@ -11,6 +10,7 @@ import androidx.preference.PreferenceFragmentCompat;
  * This activity sets up the settings menu for the brush and background for the paint area
  *
  * @author Dillon Ramsey
+ * @author Zach Garner
  */
 public class SettingsActivity extends AppCompatActivity {
 
