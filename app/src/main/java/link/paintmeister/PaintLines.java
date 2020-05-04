@@ -61,16 +61,17 @@ public class PaintLines {
 
     public String toXML(){
         StringBuilder builder = new StringBuilder();
-        builder.append("<lines>\n");
-        builder.append("\t<color>"+color+"</color>\n");
-        builder.append("\t<color>"+radius+"</color>\n");
+        builder.append("\t<lines>\n");
+        builder.append("\t\t<color>"+color+"</color>\n");
+        builder.append("\t\t<radius>"+radius+"</radius>\n");
         for (float x : x_values){
-            builder.append("\t<x>"+x+"</x>\n");
+            builder.append("\t\t<x>"+x+"</x>\n");
         }
         for (float y : y_values){
-            builder.append("\t<y>"+y+"</y>\n");
+            builder.append("\t\t<y>"+y+"</y>\n");
         }
-        builder.append("</lines>\n");
+        builder.append("\t</lines>\n");
         return builder.toString();
     }
+
 }

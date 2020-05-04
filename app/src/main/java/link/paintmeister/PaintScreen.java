@@ -94,8 +94,10 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
             case R.id.save_painting:
                 //TODO Choose a method of saving the paint. This will Preferably be XML.
                 //TODO Determine how to allow the user to save to external location.
-                String test = touchArea.toXML();
-                Log.d("XML", test);
+                String str = toXML();
+                i = new Intent(this, save_screen.class);
+                i.putExtra("Painting",str);
+
                 break;
         }
         if (i != null){
@@ -103,6 +105,14 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    private String toXML(){
+        String background = "<background_color>" + this.backgroundColor + "</background_color>\n";
+
+        String test = touchArea.toXML();
+        background = background + test;
+        Log.d("XML", test);
+        return background;
     }
 
     /**

@@ -183,6 +183,7 @@ public class CustomView extends View  implements OnTouchListener {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<PaintLines>\n");
 		for (PaintLines pl : lines){
+
 			builder.append(pl.toXML());
 		}
 		builder.append("</PaintLines>\n");
