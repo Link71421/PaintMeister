@@ -6,7 +6,8 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".loading_screen"
-    android:weightSum="10">
+    android:weightSum="10"
+    android:background="@drawable/gradient1">
 
     <TextView
         android:id="@+id/textView4"
@@ -14,17 +15,16 @@
         android:layout_height="wrap_content"
         android:textSize="32dp"
         android:textAlignment="center"
-        android:text="@string/Load_Title" />
+        android:background="@color/grey"
+        android:text="@string/Load_Title"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_recycler_view"
-        android:layout_width="409dp"
+        android:layout_width="300dp"
         android:layout_height="500dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginRight="1dp" />
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"/>
 
 
 

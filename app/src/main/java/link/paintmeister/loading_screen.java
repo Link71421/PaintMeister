@@ -18,13 +18,32 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Loading screen takes care of the loading screen
+ */
 public class loading_screen extends AppCompatActivity implements View.OnClickListener, MyAdapter.ListItemClickListener {
+    /**
+     * The recyclerView that is going to be used
+     */
     RecyclerView recyclerView;
+    /**
+     * the back button that goes back to the previous screen
+     */
     Button back;
-    Button load;
+    /**
+     * The adapter that will be used in the recyclerView
+     */
     RecyclerView.Adapter mAdapter;
 
+    /**
+     * the layoutManager that will be used
+     */
     RecyclerView.LayoutManager layoutManager;
+
+    /**
+     * the method called whenever the screen is created
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,12 +65,19 @@ public class loading_screen extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    /**
+     * gets the files that allow you to choose to load
+     * @return
+     */
     public String[] getFileNames(){
         String[] extDir = this.getFilesDir().list();
-        //data/user/O/link.paintmeister/files
         return extDir;
     }
 
+    /**
+     * allows us to check buttons
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         if(v == back){
@@ -59,6 +85,10 @@ public class loading_screen extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    /**
+     * allows us to pass whichever file was clicked to be loaded
+     * @param text
+     */
     @Override
     public void onListItemClick(String text) {
         Intent results = new Intent();
