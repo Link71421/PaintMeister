@@ -9,4 +9,5 @@
     <string name="cancel_button">Cancel</string>
     <string name="redo">Redo</string>
     <string name="undo">Undo</string>
+    <string name="Load_Title">Load a Painting</string>
 </resources>

@@ -35,6 +35,9 @@ import javax.xml.parsers.SAXParserFactory;
  */
 public class PaintScreen extends AppCompatActivity implements OnTouchListener {
 
+    /**Request code for startActivityForResult*/
+    private final static int REQUEST_CODE = 7;
+
     /**A custom view for the paint area*/
     CustomView touchArea;
 
@@ -105,7 +108,8 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
                 break;
 
             case R.id.load_painting:
-                load("Test");
+                Intent files = new Intent(this, loading_screen.class);
+                this.startActivityForResult(files, REQUEST_CODE);
                 break;
 
             case R.id.save_painting:
@@ -266,5 +270,23 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
     private void setBackgroundColor(int backColor){
         backgroundColor = backColor;
         touchArea.setBackgroundColor(backgroundColor);
+    }
+
+    /**
+     * This method gets the file name from the load screen
+     *
+     * @param requestCode - The request code sent to the activity
+     * @param resultCode  - The result code returned to this activity
+     * @param data        - The data returned (File Name)
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            Bundle extras = data.getExtras();
+            if (extras != null) {
+                Log.d("test", extras.getString("File_name"));
+                load(extras.getString("File_name"));
+            }
+        }
     }
 }
