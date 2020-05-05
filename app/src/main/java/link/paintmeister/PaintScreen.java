@@ -246,7 +246,9 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
             xmlreader.parse(inStream);
 
             //Get the map markers from the handler.
-            touchArea.loadPainting(handler.getPaintLines());
+            if (handler.getPaintLines() != null) {
+                touchArea.loadPainting(handler.getPaintLines());
+            }
             setBackgroundColor(handler.getBackground());
 
 
@@ -282,10 +284,12 @@ public class PaintScreen extends AppCompatActivity implements OnTouchListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE) {
-            Bundle extras = data.getExtras();
-            if (extras != null) {
-                Log.d("test", extras.getString("File_name"));
-                load(extras.getString("File_name"));
+            if (data != null) {
+                Bundle extras = data.getExtras();
+                if (extras != null) {
+                    Log.d("test", extras.getString("File_name"));
+                    load(extras.getString("File_name"));
+                }
             }
         }
     }

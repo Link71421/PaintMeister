@@ -48,6 +48,9 @@ public class PaintingXMLHandler extends DefaultHandler {
      * Gets the ArrayList of PaintLines that form the painting
      */
     public ArrayList<PaintLines> getPaintLines(){
+        if (pLines == null || pLines.isEmpty()){
+            return null;
+        }
         return pLines;
     }
 

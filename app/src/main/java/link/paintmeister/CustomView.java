@@ -198,13 +198,16 @@ public class CustomView extends View  implements OnTouchListener {
 	 * Converts all the paint lines into XML
 	 */
 	public String toXML(){
-		StringBuilder builder = new StringBuilder();
-		builder.append("\t<PaintLines>\n");
-		for (PaintLines pl : lines){
-			builder.append(pl.toXML());
-		}
-		builder.append("\t</PaintLines>\n");
-		return builder.toString();
+        if (lines != null && !lines.isEmpty()) {
+            StringBuilder builder = new StringBuilder();
+            builder.append("\t<PaintLines>\n");
+            for (PaintLines pl : lines) {
+                builder.append(pl.toXML());
+            }
+            builder.append("\t</PaintLines>\n");
+            return builder.toString();
+        }
+	    return "";
 	}
 
 	/**
