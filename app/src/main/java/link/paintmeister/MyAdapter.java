@@ -12,7 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * is the adpater that for the RecyclerView
+ * is the adapter that for the RecyclerView
+ *
+ * @author Dillon Ramsey
+ * @author Zach Garner
  */
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     /**

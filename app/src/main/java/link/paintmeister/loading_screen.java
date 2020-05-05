@@ -20,6 +20,9 @@ import java.util.ArrayList;
 
 /**
  * Loading screen takes care of the loading screen
+ *
+ *  * @author Dillon Ramsey
+ *  * @author Zach Garner
  */
 public class loading_screen extends AppCompatActivity implements View.OnClickListener, MyAdapter.ListItemClickListener {
     /**
